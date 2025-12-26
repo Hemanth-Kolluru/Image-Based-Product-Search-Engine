@@ -8,7 +8,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-pro"
+  model: "gemini-3-flash-preview"
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
@@ -77,6 +77,7 @@ router.post("/", upload.single("image"), async (req, res) => {
         relevance
       };
     });
+
 
     const filtered = scoredProducts
       .filter(p => p.relevance >= 1)
