@@ -6,10 +6,9 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Gemini initialization
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-3-flash-preview"
+  model: "gemini-2.5-pro"
 });
 
 router.post("/", upload.single("image"), async (req, res) => {
@@ -18,7 +17,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "No image uploaded" });
     }
 
-    // Prepare image
+
     const imagePart = {
       inlineData: {
         data: req.file.buffer.toString("base64"),
@@ -36,7 +35,6 @@ router.post("/", upload.single("image"), async (req, res) => {
       return res.status(500).json({ error: "No tags generated" });
     }
 
-    // Extract AI tags
     const aiTags = responseText
       .toLowerCase()
       .replace(/\n/g, "")
@@ -45,7 +43,6 @@ router.post("/", upload.single("image"), async (req, res) => {
 
     console.log("Extracted tags:", aiTags);
 
-    // Normalize tags
     const synonymMap = {
       sneakers: "shoes",
       trainers: "shoes",
@@ -62,12 +59,10 @@ router.post("/", upload.single("image"), async (req, res) => {
 
     console.log("Normalized tags:", normalizedTags);
 
-    // 🔑 MongoDB-safe search: ONLY $text
     const products = await Product.find({
       $text: { $search: normalizedTags.join(" ") }
     });
 
-    // 🔥 Custom relevance scoring (tag overlap)
     const scoredProducts = products.map(product => {
       const productTags = product.tags.map(t => t.toLowerCase());
 
@@ -83,7 +78,6 @@ router.post("/", upload.single("image"), async (req, res) => {
       };
     });
 
-    // Filter & sort
     const filtered = scoredProducts
       .filter(p => p.relevance >= 1)
       .sort((a, b) => b.relevance - a.relevance);

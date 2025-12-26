@@ -12,13 +12,14 @@ mongoose.connect(process.env.MONGO_URI)
     name: "Black Shoes",
     description: "Formal black shoes",
     tags: ["shoes", "black", "formal", "footwear", "sportswear"],
-    image: "http://localhost:5000/uploads/shoes.jpg"
+    image: "https://m.media-amazon.com/images/I/71f3BmjCwtL.jpg"
+
   },
   {
     name: "Blue Denim Jacket",
     description: "Casual denim jacket",
     tags: ["jacket", "denim", "blue", "casual"],
-    image: "http://localhost:5000/uploads/jacket.jpg"
+    image: "https://m.media-amazon.com/images/I/51g+JumJl9L.jpg"
   }
 ];
 

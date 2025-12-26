@@ -98,7 +98,6 @@ function App() {
 
                     <Divider style={{ margin: "10px 0" }} />
 
-                    {/* 🔥 Relevance Score */}
                     {p.relevance !== undefined && (
                       <Tag color="green">
                         Relevance Score: {p.relevance}
